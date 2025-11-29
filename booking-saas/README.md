@@ -1,66 +1,348 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 Booking SaaS - Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend Laravel para el sistema multi-tenant de gestión de reservas.
 
-## About Laravel
+## 📋 Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.1 o superior
+- Composer
+- MySQL 8.0+ o PostgreSQL 13+
+- Node.js 18+ (para compilar assets de Filament)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ⚙️ Instalación
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Instalar Dependencias
 
-## Learning Laravel
+```bash
+composer install
+npm install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Configurar Variables de Entorno
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cp .env.example .env
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Edita `.env` y configura tu base de datos:
 
-## Laravel Sponsors
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=booking_saas
+DB_USERNAME=root
+DB_PASSWORD=tu_password
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### 3. Generar Application Key
 
-### Premium Partners
+```bash
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### 4. Ejecutar Migraciones y Seeders
 
-## Contributing
+```bash
+# Crear base de datos y poblar con datos de prueba
+php artisan migrate:fresh --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Esto creará:
+- 2 tenants de prueba (demo-barbershop, elegant-salon)
+- 5 clientes por tenant
+- Personal, servicios, horarios y citas de ejemplo
+- Usuario admin para Filament
 
-## Code of Conduct
+### 5. Compilar Assets (Filament)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+npm run build
+```
 
-## Security Vulnerabilities
+### 6. Iniciar Servidor
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Para desarrollo local
+php artisan serve
 
-## License
+# Para acceso desde red local (necesario para app móvil)
+php artisan serve --host=0.0.0.0 --port=8000
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+El servidor estará disponible en `http://localhost:8000`
+
+## 🔐 Acceso al Panel Admin
+
+**URL**: `http://localhost:8000/admin`
+
+**Credenciales**:
+- Email: `admin@example.com`
+- Password: `password`
+
+## 📡 API Endpoints
+
+### Autenticación
+
+#### Registro
+```http
+POST /api/auth/register
+Content-Type: application/json
+
+{
+  "tenant_slug": "elegant-salon",
+  "name": "Juan Pérez",
+  "phone": "+5491123456789",
+  "email": "juan@example.com"
+}
+```
+
+**Respuesta**:
+```json
+{
+  "customer": {
+    "id": 1,
+    "name": "Juan Pérez",
+    "phone": "+5491123456789",
+    "email": "juan@example.com"
+  },
+  "token": "1|abc123..."
+}
+```
+
+#### Login
+```http
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "tenant_slug": "elegant-salon",
+  "phone": "+1111111111"
+}
+```
+
+#### Obtener Usuario Actual
+```http
+GET /api/auth/me
+Authorization: Bearer {token}
+```
+
+#### Logout
+```http
+POST /api/auth/logout
+Authorization: Bearer {token}
+```
+
+### Servicios
+
+```http
+GET /api/services
+Authorization: Bearer {token}
+```
+
+### Personal
+
+```http
+GET /api/staff
+Authorization: Bearer {token}
+```
+
+### Citas
+
+```http
+# Listar citas del cliente
+GET /api/appointments
+Authorization: Bearer {token}
+
+# Crear cita
+POST /api/appointments
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "service_id": 1,
+  "staff_id": 1,
+  "appointment_date": "2024-01-15",
+  "start_time": "10:00:00"
+}
+```
+
+## 🗄️ Estructura de Base de Datos
+
+### Tablas Principales
+
+- `tenants` - Negocios/Empresas
+- `users` - Usuarios admin (Filament)
+- `customers` - Clientes de cada tenant
+- `staff` - Personal de cada tenant
+- `services` - Servicios ofrecidos
+- `appointments` - Citas/Reservas
+- `schedules` - Horarios de disponibilidad
+
+## 🔧 Comandos Útiles
+
+### Desarrollo
+
+```bash
+# Limpiar cache
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+
+# Ver rutas
+php artisan route:list
+
+# Crear nuevo modelo con migración
+php artisan make:model NombreModelo -m
+
+# Crear controlador
+php artisan make:controller Api/NombreController
+
+# Crear seeder
+php artisan make:seeder NombreSeeder
+```
+
+### Base de Datos
+
+```bash
+# Ejecutar migraciones
+php artisan migrate
+
+# Revertir última migración
+php artisan migrate:rollback
+
+# Resetear y re-ejecutar todo
+php artisan migrate:fresh --seed
+
+# Ejecutar seeders específicos
+php artisan db:seed --class=TenantSeeder
+```
+
+### Testing
+
+```bash
+# Ejecutar tests
+php artisan test
+
+# Con coverage
+php artisan test --coverage
+```
+
+## 📦 Paquetes Principales
+
+- **laravel/framework** (^10.0) - Framework base
+- **laravel/sanctum** (^3.2) - Autenticación API
+- **filament/filament** (3.0) - Panel administrativo
+- **spatie/laravel-permission** (^6.23) - Roles y permisos
+- **spatie/laravel-query-builder** (^5.7) - Query builder para API
+
+## 🏗️ Arquitectura
+
+### Multi-Tenancy
+
+El sistema usa un enfoque de **multi-tenancy a nivel de base de datos compartida**:
+
+- Todas las tablas tienen `tenant_id`
+- Los modelos usan el trait `BelongsToTenant`
+- El middleware `TenantScope` filtra automáticamente por tenant
+- Cada request debe incluir `tenant_slug` en autenticación
+
+### Autenticación
+
+- **API**: Laravel Sanctum con tokens
+- **Admin**: Session-based (Filament)
+- Los clientes se autentican solo con teléfono (sin password)
+
+## 🔒 Seguridad
+
+### Configuración de CORS
+
+Edita `config/cors.php` para permitir requests desde tu app móvil:
+
+```php
+'allowed_origins' => ['*'], // En producción, especifica dominios
+```
+
+### Rate Limiting
+
+Las rutas API tienen rate limiting configurado en `app/Http/Kernel.php`:
+
+```php
+'api' => [
+    'throttle:60,1', // 60 requests por minuto
+],
+```
+
+## 🐛 Debugging
+
+### Logs
+
+Los logs se guardan en `storage/logs/laravel.log`
+
+```bash
+# Ver logs en tiempo real
+tail -f storage/logs/laravel.log
+```
+
+### Query Debugging
+
+Habilita query logging en tu código:
+
+```php
+DB::enableQueryLog();
+// ... tu código
+dd(DB::getQueryLog());
+```
+
+## 📊 Seeders de Prueba
+
+### Tenants
+- `demo-barbershop` - Barbería activa
+- `elegant-salon` - Salón en período de prueba
+
+### Clientes (para cada tenant)
+- John Doe: `+1111111111`
+- Jane Smith: `+2222222222`
+- Bob Johnson: `+3333333333`
+- Alice Brown: `+4444444444`
+- Charlie Wilson: `+5555555555`
+
+## 🚀 Despliegue
+
+### Producción
+
+1. Configurar variables de entorno de producción
+2. Ejecutar migraciones: `php artisan migrate --force`
+3. Optimizar: `php artisan optimize`
+4. Compilar assets: `npm run build`
+5. Configurar queue worker: `php artisan queue:work`
+
+### Variables de Entorno Importantes
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://tu-dominio.com
+
+DB_CONNECTION=mysql
+DB_HOST=tu-host
+DB_DATABASE=tu-database
+
+SANCTUM_STATEFUL_DOMAINS=tu-dominio.com
+SESSION_DOMAIN=.tu-dominio.com
+```
+
+## 📝 Notas
+
+- El sistema usa **soft deletes** en la mayoría de modelos
+- Los timestamps son automáticos en todos los modelos
+- Las citas tienen estados: pending, confirmed, completed, cancelled
+- Los horarios se definen por día de la semana
+
+## 🤝 Contribuir
+
+Ver [CONTRIBUTING.md](../CONTRIBUTING.md) en la raíz del proyecto.
+
+## 📄 Licencia
+
+MIT License - ver [LICENSE](../LICENSE)
