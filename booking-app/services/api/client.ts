@@ -8,8 +8,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ApiError } from '@/types';
 
 // Configuración base
-const API_URL = process.env.API_URL || 'http://localhost:8000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8000/api';
 const TIMEOUT = 30000; // 30 segundos
+
+// Log de configuración en desarrollo
+if (__DEV__) {
+    console.log('🔧 API Configuration:', {
+        API_URL,
+        ENV_VAR: process.env.EXPO_PUBLIC_API_URL,
+        FALLBACK: 'http://localhost:8000/api'
+    });
+}
 
 // Storage keys
 export const STORAGE_KEYS = {
@@ -45,7 +54,9 @@ const createApiClient = (): AxiosInstance => {
                 if (__DEV__) {
                     console.log('📤 API Request:', {
                         method: config.method?.toUpperCase(),
+                        baseURL: config.baseURL,
                         url: config.url,
+                        fullURL: `${config.baseURL}${config.url}`,
                         data: config.data,
                         headers: config.headers,
                     });
@@ -82,9 +93,14 @@ const createApiClient = (): AxiosInstance => {
             if (__DEV__) {
                 console.error('❌ API Error:', {
                     status: error.response?.status,
+                    baseURL: error.config?.baseURL,
                     url: error.config?.url,
+                    fullURL: error.config ? `${error.config.baseURL}${error.config.url}` : 'N/A',
                     data: error.response?.data,
                     message: error.message,
+                    code: error.code,
+                    hasResponse: !!error.response,
+                    hasRequest: !!error.request,
                 });
             }
 

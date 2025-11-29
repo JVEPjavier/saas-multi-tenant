@@ -8,15 +8,20 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\AppointmentController;
 use App\Http\Controllers\Api\CustomerController;
 
-// Public routes
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+// Public routes - Authentication
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    
+    // Protected auth routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::get('/me', [AuthController::class, 'me']);
+    });
+});
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
-
     // Staff
     Route::get('/staff', [StaffController::class, 'index']);
     Route::get('/staff/{id}', [StaffController::class, 'show']);
