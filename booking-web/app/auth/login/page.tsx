@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * Login Page
- * Authentication page with tenant selection and phone login
- * Using Server Actions (Next.js 16 best practice)
- */
-
 import { useActionState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginAction, type LoginFormState } from '@/actions/auth';
@@ -22,7 +16,6 @@ export default function LoginPage() {
     const router = useRouter();
     const [state, formAction, isPending] = useActionState(loginAction, initialState);
 
-    // Redirect on success
     useEffect(() => {
         if (state.success) {
             router.push('/dashboard');
@@ -31,7 +24,7 @@ export default function LoginPage() {
     }, [state.success, router]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-background to-muted/20 p-4">
             <div className="absolute top-4 right-4">
                 <ThemeToggle />
             </div>
@@ -54,7 +47,7 @@ export default function LoginPage() {
                         {/* Error Message */}
                         {state.errors?._form && (
                             <div className="flex items-center gap-2 p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-                                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                                <AlertCircle className="w-4 h-4 shrink-0" />
                                 <p>{state.errors._form[0]}</p>
                             </div>
                         )}

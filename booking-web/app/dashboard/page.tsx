@@ -16,7 +16,6 @@ export default async function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Header */}
             <header className="border-b border-border bg-card">
                 <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -25,7 +24,7 @@ export default async function DashboardPage() {
                         </div>
                         <div>
                             <h1 className="font-semibold">Booking App</h1>
-                            <p className="text-xs text-muted-foreground">Dashboard</p>
+                            <p className="text-xs text-muted-foreground">Panel de Control</p>
                         </div>
                     </div>
 
@@ -39,7 +38,7 @@ export default async function DashboardPage() {
                         >
                             <Button variant="ghost" size="sm" type="submit">
                                 <LogOut className="w-4 h-4 mr-2" />
-                                Sign Out
+                                Cerrar Sesión
                             </Button>
                         </form>
                     </div>
@@ -49,12 +48,12 @@ export default async function DashboardPage() {
             {/* Main Content */}
             <main className="container mx-auto px-4 py-8">
                 {/* Welcome Section */}
-                <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl p-8 mb-8 border border-primary/20">
+                <div className="bg-linear-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl p-8 mb-8 border border-primary/20">
                     <h2 className="text-3xl font-bold mb-2">
-                        Welcome back, {customer.name}! 👋
+                        ¡Bienvenido de nuevo, {customer.name}! 👋
                     </h2>
                     <p className="text-muted-foreground">
-                        Manage your appointments and profile
+                        Gestiona tus citas y perfil
                     </p>
                 </div>
 
@@ -66,7 +65,7 @@ export default async function DashboardPage() {
                                 <Calendar className="w-6 h-6 text-blue-500" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Appointments</p>
+                                <p className="text-sm text-muted-foreground">Total de Citas</p>
                                 <p className="text-2xl font-bold">{customer.total_appointments}</p>
                             </div>
                         </div>
@@ -78,7 +77,7 @@ export default async function DashboardPage() {
                                 <User className="w-6 h-6 text-green-500" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Total Spent</p>
+                                <p className="text-sm text-muted-foreground">Total Gastado</p>
                                 <p className="text-2xl font-bold">${customer.total_spent}</p>
                             </div>
                         </div>
@@ -90,9 +89,9 @@ export default async function DashboardPage() {
                                 <Building2 className="w-6 h-6 text-purple-500" />
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground">Member Since</p>
+                                <p className="text-sm text-muted-foreground">Miembro Desde</p>
                                 <p className="text-2xl font-bold">
-                                    {new Date(customer.created_at).toLocaleDateString('en-US', {
+                                    {new Date(customer.created_at).toLocaleDateString('es-ES', {
                                         month: 'short',
                                         year: 'numeric',
                                     })}
@@ -104,14 +103,14 @@ export default async function DashboardPage() {
 
                 {/* Customer Info */}
                 <div className="bg-card border border-border rounded-xl p-6">
-                    <h3 className="text-lg font-semibold mb-4">Your Information</h3>
+                    <h3 className="text-lg font-semibold mb-4">Tu Información</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <p className="text-sm text-muted-foreground">Name</p>
+                            <p className="text-sm text-muted-foreground">Nombre</p>
                             <p className="font-medium">{customer.name}</p>
                         </div>
                         <div>
-                            <p className="text-sm text-muted-foreground">Phone</p>
+                            <p className="text-sm text-muted-foreground">Teléfono</p>
                             <p className="font-medium">{customer.phone}</p>
                         </div>
                         {customer.email && (
@@ -121,7 +120,7 @@ export default async function DashboardPage() {
                             </div>
                         )}
                         <div>
-                            <p className="text-sm text-muted-foreground">Customer ID</p>
+                            <p className="text-sm text-muted-foreground">ID de Cliente</p>
                             <p className="font-medium">#{customer.id}</p>
                         </div>
                     </div>
@@ -131,11 +130,11 @@ export default async function DashboardPage() {
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Button size="lg" className="h-14">
                         <Calendar className="w-5 h-5 mr-2" />
-                        Book New Appointment
+                        Reservar Nueva Cita
                     </Button>
                     <Button size="lg" variant="outline" className="h-14">
                         <User className="w-5 h-5 mr-2" />
-                        View My Appointments
+                        Ver Mis Citas
                     </Button>
                 </div>
             </main>
