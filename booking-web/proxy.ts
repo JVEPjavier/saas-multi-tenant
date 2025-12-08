@@ -6,26 +6,26 @@ export async function proxy(request: NextRequest) {
     const session = await auth();
 
     // Protected routes
-    const protectedRoutes = ['/dashboard', '/appointments', '/profile'];
+    const protectedRoutes = ['/home', '/appointments', '/profile'];
     const isProtectedRoute = protectedRoutes.some((route) =>
         request.nextUrl.pathname.startsWith(route)
     );
 
     // Redirect to login if accessing protected route without session
     if (isProtectedRoute && !session) {
-        const loginUrl = new URL('/auth/login', request.url);
+        const loginUrl = new URL('/login', request.url);
         loginUrl.searchParams.set('callbackUrl', request.nextUrl.pathname);
         return NextResponse.redirect(loginUrl);
     }
 
     // Redirect to dashboard if accessing auth pages with active session
-    const authRoutes = ['/auth/login', '/auth/register'];
+    const authRoutes = ['/login', '/register'];
     const isAuthRoute = authRoutes.some((route) =>
         request.nextUrl.pathname.startsWith(route)
     );
 
     if (isAuthRoute && session) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+        return NextResponse.redirect(new URL('/home', request.url));
     }
 
     return NextResponse.next();
@@ -33,9 +33,10 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
     matcher: [
-        '/dashboard/:path*',
+        '/home',
         '/appointments/:path*',
         '/profile/:path*',
-        '/auth/:path*',
+        '/login',
+        '/register',
     ],
 };

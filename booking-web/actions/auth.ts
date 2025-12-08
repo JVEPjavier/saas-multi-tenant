@@ -139,5 +139,5 @@ export async function registerAction(
  * Logout action
  */
 export async function logoutAction() {
-    await signOut({ redirectTo: '/auth/login' });
+    await signOut({ redirectTo: '/login' });
 }
